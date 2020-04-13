@@ -9,10 +9,10 @@ import (
 func main() {
 	client := resty.New()
 
-	token   := ""
-	userid  := ""
+	token := ""
+	userid := ""
 	baseurl := "https://abc.de"
-	user    := ""
+	user := ""
 
 	body := `{ "username": "` + user + `" }`
 	resp, _ := client.R().
@@ -27,7 +27,6 @@ func main() {
 	_ = json.Unmarshal([]byte(resp.String()), &result)
 	var rid = result["room"].(map[string]interface{})["_id"].(string)
 
-
 	msg := ""
 	argsWithoutProg := os.Args[1:]
 
@@ -37,7 +36,7 @@ func main() {
 		}
 		msg += arg
 	}
-	body=`{"message": { "rid": "` + rid + `", "alias": "GoLang", "emoji": ":robot:", "msg": "` + msg + `" }}`
+	body = `{"message": { "rid": "` + rid + `", "alias": "GoLang", "emoji": ":robot:", "msg": "` + msg + `" }}`
 
 	resp, _ = client.R().
 		EnableTrace().
