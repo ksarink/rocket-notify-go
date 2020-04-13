@@ -12,9 +12,9 @@ func main() {
 	token := ""
 	userid := ""
 	baseurl := "https://abc.de"
-	user := ""
+	username := ""
 
-	body := `{ "username": "` + user + `" }`
+	body := `{ "username": "` + username + `" }`
 	resp, _ := client.R().
 		EnableTrace().
 		SetHeader("Content-Type", "application/json").
