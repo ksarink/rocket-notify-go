@@ -4,7 +4,18 @@ import (
 	"encoding/json"
 	"github.com/go-resty/resty/v2"
 	"os"
+	"os/user"
 )
+
+func GetTargetUser() string {
+	sudouser := os.Getenv("SUDO_USER")
+	if len(sudouser) > 0 {
+		return sudouser
+	}
+	currentuser, _ := user.Current()
+	username := currentuser.Username
+	return username
+}
 
 func main() {
 	client := resty.New()
@@ -12,7 +23,7 @@ func main() {
 	token := ""
 	userid := ""
 	baseurl := "https://abc.de"
-	username := ""
+	username := GetTargetUser()
 
 	body := `{ "username": "` + username + `" }`
 	resp, _ := client.R().
