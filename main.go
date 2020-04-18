@@ -95,12 +95,12 @@ func SendMessage(restyclient *resty.Client, cfg *Config, rid string) {
 	if len(pipeinput) > 0 {
 		msg = "```" + pipeinput + "```" + msg
 	}
-	msg_json, _ := json.Marshal(msg)
+	msgJson, _ := json.Marshal(msg)
 
 	body := `{"message": { "rid": "` + rid +
 		`", "alias": "` + *alias +
 		`", "emoji": "` + *emoji +
-		`", "msg": ` + string(msg_json) + ` }}`
+		`", "msg": ` + string(msgJson) + ` }}`
 
 	_, _ = restyclient.R().
 		EnableTrace().
