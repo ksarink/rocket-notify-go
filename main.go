@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/go-resty/resty/v2"
 	"gopkg.in/yaml.v2"
+	"log"
 	"os"
 	"os/user"
 )
@@ -27,19 +28,19 @@ func GetTargetUser() string {
 func LoadConfig(cfg *Config) {
 	f, err := os.Open("/etc/rocket-notify/config.yml")
 	if err != nil {
-		println(err)
+		log.Fatal(err)
 	}
 
 	//var cfg Config
 	decoder := yaml.NewDecoder(f)
 	err = decoder.Decode(&cfg)
 	if err != nil {
-		println(err)
+		log.Fatal(err)
 	}
 
 	err = f.Close()
 	if err != nil {
-		println(err)
+		log.Fatal(err)
 	}
 }
 
