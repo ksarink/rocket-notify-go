@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"flag"
 	"github.com/go-resty/resty/v2"
@@ -59,6 +60,28 @@ func GetRoomId(restyclient *resty.Client, cfg *Config, username string) string {
 	_ = json.Unmarshal([]byte(resp.String()), &result)
 	var rid = result["room"].(map[string]interface{})["_id"].(string)
 	return rid
+}
+
+func GetPipeInput() string {
+	info, err := os.Stdin.Stat()
+	if err != nil {
+		// no pipe input
+		return ""
+	}
+
+	if info.Mode()&os.ModeCharDevice != 0 {
+		// no pipe input
+		return ""
+	}
+
+	scanner := bufio.NewScanner(bufio.NewReader(os.Stdin))
+	var output []string
+
+	for scanner.Scan() {
+		output = append(output, scanner.Text())
+	}
+
+	return strings.Join(output, "\\n")
 }
 
 func SendMessage(restyclient *resty.Client, cfg *Config, rid string) {
