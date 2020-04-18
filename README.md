@@ -4,9 +4,9 @@ This tool allows you to send quick notifications or whole messages to yourself f
 
 Example usages (`sleep 10` is the placeholder for your calculation):
 ```
-sleep 10; rocket-notify                         # simple
+sleep 10; rocket-notify                         # simple empty notification
 sleep 10; rocket-notify Calculation finished!   # sends the message "Calculation finished!"
-sleep 10; rocket-notify -emoji :astonished:     # use a emoji as avator 
+sleep 10; rocket-notify -emoji :astonished:     # use an emoji as avator 
 sleep 10; rocket-notify -sender Application1    # define the name of the sender 
 sleep 10; rocket-notify -sender="Application 1" # parameter style with and without equal sign or quote marks - if not seperated by space
 sleep 10 | rocket-notify finished               # sends the output of the preceding command with the message "finished"
