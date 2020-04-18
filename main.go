@@ -2,11 +2,13 @@ package main
 
 import (
 	"encoding/json"
+	"flag"
 	"github.com/go-resty/resty/v2"
 	"gopkg.in/yaml.v2"
 	"log"
 	"os"
 	"os/user"
+	"strings"
 )
 
 type Config struct {
@@ -31,7 +33,6 @@ func LoadConfig(cfg *Config) {
 		log.Fatal(err)
 	}
 
-	//var cfg Config
 	decoder := yaml.NewDecoder(f)
 	err = decoder.Decode(&cfg)
 	if err != nil {
@@ -60,8 +61,17 @@ func GetRoomId(restyclient *resty.Client, cfg *Config, username string) string {
 	return rid
 }
 
-func SendMessage(restyclient *resty.Client, cfg *Config, rid string, msg string) {
-	body := `{"message": { "rid": "` + rid + `", "alias": "GoLang", "emoji": ":robot:", "msg": "` + msg + `" }}`
+func SendMessage(restyclient *resty.Client, cfg *Config, rid string) {
+	hostname, _ := os.Hostname()
+	alias := flag.String("sender", hostname, "The name of the sender (if omitted: hostname)")
+	emoji := flag.String("emoji", ":robot:", "The emoji used as avatar (e.g. :robot:)")
+	flag.Parse()
+	msg := strings.Join(flag.Args(), " ")
+
+	body := `{"message": { "rid": "` + rid +
+		`", "alias": "` + *alias +
+		`", "emoji": "` + *emoji +
+		`", "msg": "` + msg + `" }}`
 
 	_, _ = restyclient.R().
 		EnableTrace().
@@ -72,19 +82,6 @@ func SendMessage(restyclient *resty.Client, cfg *Config, rid string, msg string)
 		Post(cfg.Baseurl + "/api/v1/chat.sendMessage")
 }
 
-func CreateMessage() string {
-	msg := ""
-	argsWithoutProg := os.Args[1:]
-
-	for i, arg := range argsWithoutProg {
-		if i > 0 {
-			msg += " "
-		}
-		msg += arg
-	}
-	return msg
-}
-
 func main() {
 	var cfg Config
 	LoadConfig(&cfg)
@@ -93,6 +90,5 @@ func main() {
 
 	username := GetTargetUser()
 	rid := GetRoomId(client, &cfg, username)
-	msg := CreateMessage()
-	SendMessage(client, &cfg, rid, msg)
+	SendMessage(client, &cfg, rid)
 }
