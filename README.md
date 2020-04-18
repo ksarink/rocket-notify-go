@@ -15,3 +15,8 @@ sleep 10 | rocket-notify finished               # sends the output of the preced
 rocket-notify --help
 rocket-notify -h 
 ```
+
+Please install by executing the rocket-notify-install.sh script as a privileged user. Afterwards edit the config (/etc/rocket-notify/config.yml) according to your needs.
+The installer downloads the latest release into the /usr/local/bin directory, creates a user, sets ownership of the binary and the user-sticky bit. Also the ownership of the config is set to the created user and its permissions to 600. This setup allows to safely write your REST-API-token into your config in a multi user environment. With the user sticky bit, the binary can access the config but your users cannot (even though they can execute the binary and indirectly use the config)
+
+The Rocket.Chat username is derived from the currently logged in user. Which helps when you have connected your os and your Rocket.Chat instance to an LDAP server. In the future alternatively you can add a local config to define your user. 
