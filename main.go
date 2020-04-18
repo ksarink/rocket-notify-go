@@ -81,7 +81,7 @@ func GetPipeInput() string {
 		output = append(output, scanner.Text())
 	}
 
-	return strings.Join(output, "\\n")
+	return strings.Join(output, "\n")
 }
 
 func SendMessage(restyclient *resty.Client, cfg *Config, rid string) {
@@ -89,12 +89,18 @@ func SendMessage(restyclient *resty.Client, cfg *Config, rid string) {
 	alias := flag.String("sender", hostname, "The name of the sender (if omitted: hostname)")
 	emoji := flag.String("emoji", ":robot:", "The emoji used as avatar (e.g. :robot:)")
 	flag.Parse()
+
 	msg := strings.Join(flag.Args(), " ")
+	pipeinput := GetPipeInput()
+	if len(pipeinput) > 0 {
+		msg = "```" + pipeinput + "```" + msg
+	}
+	msg_json, _ := json.Marshal(msg)
 
 	body := `{"message": { "rid": "` + rid +
 		`", "alias": "` + *alias +
 		`", "emoji": "` + *emoji +
-		`", "msg": "` + msg + `" }}`
+		`", "msg": ` + string(msg_json) + ` }}`
 
 	_, _ = restyclient.R().
 		EnableTrace().
